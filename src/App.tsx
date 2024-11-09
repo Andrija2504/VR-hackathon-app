@@ -1,19 +1,24 @@
-import './App.css'
-// import Profile from './components/Profile'
-import { Canvas } from '@react-three/fiber';
-import {OrbitControls} from '@react-three/drei'
-import Sphere360 from './components/Sphere360'
-import PostsPage from './components/PostsPage';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import './App.css';
+import PostsPage from './components/PostsPage'; // Home page
+import ProfilePage from './components/ProfilePage'; // Profile page
 
-function App() {
+const App: React.FC = () => {
+  const loggedInUserId = 2; // Example logged-in user ID
 
   return (
-    <>
-      <div>
-        <PostsPage/>
-      </div>
-    </>
-  )
-}
+    <Router>
+      <nav style={{ padding: '10px' }}>
+        <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
+        <Link to="/profile">Profile</Link>
+      </nav>
+      <Routes>
+        <Route path="/" element={<PostsPage  loggedInUserId={loggedInUserId} />} />
+        <Route path="/profile" element={<ProfilePage loggedInUserId={loggedInUserId} />} />
+      </Routes>
+    </Router>
+  );
+};
 
-export default App
+export default App;
