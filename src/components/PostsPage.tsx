@@ -1,12 +1,12 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { profiles, posts, friends } from '../data';
+import { profiles, posts, friends, games, gamePosts, playedGames } from '../data';
 import Sphere360 from './Sphere360';
 
 interface PostsPageProps {
-    loggedInUserId: number;
-  }
+  loggedInUserId: number;
+}
 
 const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId }) => {
   // Get profile name by ID
@@ -22,10 +22,24 @@ const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId }) => {
     );
   };
 
-  // Filter posts based on visibility and friendship, excluding own posts
+  // Get the list of game IDs played by the logged-in user
+  const playedGameIds = playedGames
+    .filter((played) => played.playerId === loggedInUserId)
+    .map((played) => played.gameId);
+
+  // Get the list of post IDs associated with games played by the user
+  const playedPostIds = gamePosts
+    .filter((gamePost) => playedGameIds.includes(gamePost.gameId))
+    .map((gamePost) => gamePost.postId);
+
+  // Filter posts based on played games and friendship
   const filteredPosts = posts.filter((post) => {
     if (post.profileId === loggedInUserId) {
       // Exclude the logged-in user's own posts
+      return false;
+    }
+    if (!playedPostIds.includes(post.id)) {
+      // Only include posts that are part of games played by the user
       return false;
     }
     if (post.visibility === 3) {
