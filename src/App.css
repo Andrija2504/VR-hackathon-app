@@ -101,3 +101,103 @@ p {
   line-height: 1.5;
   margin-top: 12px;
 }
+
+.game-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.game-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.material-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.material-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15), 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.viewer-card {
+  position: relative;
+}
+
+.map-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.map-container {
+  height: 400px;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.score-banner {
+  background: #f5f5f5;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.score-label {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.score-value {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #3f51b5;
+}
+
+.material-button {
+  margin: 16px;
+  padding: 12px 24px;
+  background: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background 0.3s ease;
+}
+
+.material-button:hover:not(.disabled) {
+  background: #303f9f;
+}
+
+.material-button.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.game-over-container {
+  padding: 24px;
+  max-width: 600px;
+  margin: 48px auto;
+  text-align: center;
+}
+
+.game-over-container .score-value {
+  font-size: 3rem;
+  display: block;
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .game-content {
+    grid-template-columns: 1fr;
+  }
+}

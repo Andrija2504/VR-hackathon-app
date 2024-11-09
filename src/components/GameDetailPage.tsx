@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { gamePosts, posts } from '../data';
-import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents, Popup } from 'react-leaflet';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import L, { LatLngBoundsExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Sphere360 from './Sphere360'; // Assuming Sphere360 component is available
+
+// Add at the top of the file with other imports
+const finalPositionIcon = L.icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 // Calculate distance using the Haversine formula
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
@@ -27,30 +37,30 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 };
 
 interface LocationMarkerProps {
-    lat: number | null;
-    lng: number | null;
-    onLocationSelected: (lat: number, lng: number) => void;
-  }
-  
-  const LocationMarker: React.FC<LocationMarkerProps> = ({ lat, lng, onLocationSelected }) => {
-    const [position, setPosition] = useState<L.LatLng | null>(null);
-  
-    useEffect(() => {
-      if (lat === null || lng === null) {
-        setPosition(null); // Reset marker position when coordinates are cleared
-      }
-    }, [lat, lng]);
-  
-    useMapEvents({
-      click(e) {
-        const { lat, lng } = e.latlng;
-        setPosition(L.latLng(lat, lng));
-        onLocationSelected(lat, lng);
-      },
-    });
-  
-    return position === null ? null : <Marker position={position}></Marker>;
-  };
+  lat: number | null;
+  lng: number | null;
+  onLocationSelected: (lat: number, lng: number) => void;
+}
+
+const LocationMarker: React.FC<LocationMarkerProps> = ({ lat, lng, onLocationSelected }) => {
+  const [position, setPosition] = useState<L.LatLng | null>(null);
+
+  useEffect(() => {
+    if (lat === null || lng === null) {
+      setPosition(null); // Reset marker position when coordinates are cleared
+    }
+  }, [lat, lng]);
+
+  useMapEvents({
+    click(e) {
+      const { lat, lng } = e.latlng;
+      setPosition(L.latLng(lat, lng));
+      onLocationSelected(lat, lng);
+    },
+  });
+
+  return position === null ? null : <Marker position={position}></Marker>;
+};
 
 const GameDetailPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
@@ -60,6 +70,8 @@ const GameDetailPage: React.FC = () => {
   const [lng, setLng] = useState<number | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [polylineCoords, setPolylineCoords] = useState<[number, number][]>([]);
+  const [showFinalPosition, setShowFinalPosition] = useState(false);
+  const [finalPosition, setFinalPosition] = useState<[number, number] | null>(null);
 
   // Filter the posts for the current game
   const gamePostIds = gamePosts.filter(gp => gp.gameId === Number(gameId)).map(gp => gp.postId);
@@ -68,27 +80,29 @@ const GameDetailPage: React.FC = () => {
   const handleGuess = () => {
     if (lat !== null && lng !== null && currentIndex < gameImages.length) {
       const currentPost = gameImages[currentIndex];
-
-      // Use actual coordinates from the post
       const correctLat = currentPost.latitude;
       const correctLng = currentPost.longitude;
 
+      // Set the final position immediately after guess
+      setFinalPosition([correctLat, correctLng]);
+      setShowFinalPosition(true);
+
+      // Rest of existing handleGuess logic...
       const distance = calculateDistance(lat, lng, correctLat, correctLng);
-      const scoreForRound = Math.max(0, (20037.5 - (distance/1000))/4007.5); // Example scoring formula
+      const scoreForRound = Math.max(0, (20037.5 - (distance / 1000)) / 4007.5);
       setScore(prevScore => prevScore + Math.floor(scoreForRound));
-
-      // Disable the button right away
-        setIsButtonDisabled(true);
-
-      // Draw a line between the guessed location and the correct location
+      setIsButtonDisabled(true);
       setPolylineCoords([[lat, lng], [correctLat, correctLng]]);
+
       setTimeout(() => {
         setCurrentIndex(prevIndex => prevIndex + 1);
         setLat(null);
         setLng(null);
         setIsButtonDisabled(false);
         setPolylineCoords([]);
-      }, 5000); // Wait 5 seconds before showing next image
+        setShowFinalPosition(false);
+        setFinalPosition(null);
+      }, 5000);
     }
   };
 
@@ -105,56 +119,63 @@ const GameDetailPage: React.FC = () => {
   };
 
   if (currentIndex >= gameImages.length) {
-    return <div style={{ padding: '20px' }}><h1>Game Over! Your final score: {score}</h1></div>;
+    return (
+      <div className="game-over-container">
+        <div className="material-card">
+          <h1>Game Over!</h1>
+          <div className="score-display">
+            <span className="score-label">Final Score:</span>
+            <span className="score-value">{score}</span>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div style={{ display: 'flex', padding: '20px', gap: '20px' }}>
-      <div style={{ flex: 1 }}>
-        <Canvas style={{ height: '400px' }}>
-          <OrbitControls enableZoom={false} />
-          <Sphere360 imageUrl={gameImages[currentIndex].img_url} />
-        </Canvas>
-        <div style={{ marginTop: '10px' }}>
-          <strong>Current Score: {score}</strong>
+    <div className="game-container">
+      <div className="game-content">
+        <div className="material-card viewer-card">
+          <Canvas style={{ height: '400px' }}>
+            <OrbitControls enableZoom={false} />
+            <Sphere360 imageUrl={gameImages[currentIndex].img_url} />
+          </Canvas>
+          <div className="score-banner">
+            <span className="score-label">Current Score:</span>
+            <span className="score-value">{score}</span>
+          </div>
         </div>
-      </div>
-      <div style={{ flex: 1 }}>
-        <MapContainer center={[47.5162, 14.5501]} zoom={4} style={{ height: '400px', width: '100%' }}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution="&copy; OpenStreetMap contributors"
-          />
-          <LocationMarker
-            lat={lat}
-            lng={lng}
-            onLocationSelected={(lat, lng) => {
-                setLat(lat);
-                setLng(lng);
-            }}
-        />
-          {polylineCoords.length === 2 && (
-            <>
-              <Polyline positions={polylineCoords} color="red" />
-              <FitMapBounds coordinates={polylineCoords} />
-            </>
-          )}
-        </MapContainer>
-        <button
+
+        <div className="material-card map-card">
+          <MapContainer center={[47.5162, 14.5501]} zoom={4} style={{ height: '400px', width: '100%' }}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution="&copy; OpenStreetMap contributors"
+            />
+            <LocationMarker lat={lat} lng={lng} onLocationSelected={(lat, lng) => {
+              setLat(lat);
+              setLng(lng);
+            }} />
+            {showFinalPosition && finalPosition && (
+              <Marker position={finalPosition} icon={finalPositionIcon}>
+                <Popup>Correct Location</Popup>
+              </Marker>
+            )}
+            {polylineCoords.length === 2 && (
+              <>
+                <Polyline positions={polylineCoords} color="red" />
+                <FitMapBounds coordinates={polylineCoords} />
+              </>
+            )}
+          </MapContainer>
+          <button
             onClick={handleGuess}
             disabled={isButtonDisabled || lat === null || lng === null}
-            style={{
-                marginTop: '10px',
-                backgroundColor: isButtonDisabled || lat === null || lng === null ? 'gray' : '#007bff',
-                color: 'white',
-                cursor: isButtonDisabled || lat === null || lng === null ? 'not-allowed' : 'pointer',
-                padding: '10px 20px',
-                border: 'none',
-                borderRadius: '4px',
-            }}
-        >
-          Make a Guess
-        </button>
+            className={`material-button ${(isButtonDisabled || lat === null || lng === null) ? 'disabled' : ''}`}
+          >
+            Make a Guess
+          </button>
+        </div>
       </div>
     </div>
   );

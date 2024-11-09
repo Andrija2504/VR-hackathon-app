@@ -20,6 +20,7 @@ const NavBar: React.FC = () => {
           to='/games'
           className={`nav-item ${location.pathname === '/games' ? 'active' : ''}`}
           >
+            <span className="nav-icon">🎮</span>
             <span className="nav-text">Games</span>
           </Link>
         <Link 
