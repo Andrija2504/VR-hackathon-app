@@ -9,45 +9,38 @@ interface ProfilePageProps {
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ loggedInUserId }) => {
-  const [selectedVisibility, setSelectedVisibility] = useState<number | null>(null);
-
-  // Filter posts based on the selected visibility
+  const [selectedVisibility, setSelectedVisibility] = useState<number | null>(1);
+  const profile = profiles.find((p) => p.id === loggedInUserId);
+  
   const filteredPosts = posts.filter((post) => {
-    if (selectedVisibility === null) return false; // No folder selected
-    if (post.profileId !== loggedInUserId && selectedVisibility !== 1) return false; // Only show user's posts unless it is "Private"
-    
-    // Show all posts if "Private" is selected
-    if (selectedVisibility === 1) {
-      return post.profileId === loggedInUserId;
-    }
-    
-    // Filter posts based on visibility for "Friends" and "Public" folders
+    if (selectedVisibility === null) return false;
+    if (post.profileId !== loggedInUserId && selectedVisibility !== 1) return false;
+    if (selectedVisibility === 1) return post.profileId === loggedInUserId;
     return post.visibility === selectedVisibility;
   });
 
-  // Get profile name for display (assuming you want to show the profile's own name)
-  const profile = profiles.find((p) => p.id === loggedInUserId);
-
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="posts-page">
       <h1>{profile ? `${profile.name} ${profile.lastName}` : 'User'}'s Profile</h1>
+      
       <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-        {/* Folder Buttons */}
-        <button onClick={() => setSelectedVisibility(1)} style={{ padding: '10px 20px' }}>Private</button>
-        <button onClick={() => setSelectedVisibility(2)} style={{ padding: '10px 20px' }}>Friends</button>
-        <button onClick={() => setSelectedVisibility(3)} style={{ padding: '10px 20px' }}>Public</button>
+        <button onClick={() => setSelectedVisibility(1)}>Private</button>
+        <button onClick={() => setSelectedVisibility(2)}>Friends</button>
+        <button onClick={() => setSelectedVisibility(3)}>Public</button>
       </div>
 
-      {/* Display posts based on the selected folder */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+      <div className="posts-container">
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
-            <div key={post.id} style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '16px', maxWidth: '400px', margin: 'auto' }}>
-              <Canvas style={{ height: '300px' }}>
-                <OrbitControls enableZoom={false} />
-                <Sphere360 imageUrl={post.img_url} />
-              </Canvas>
-              <p style={{ marginTop: '10px', textAlign: 'center', fontStyle: 'italic' }}>{post.caption}</p>
+            <div key={post.id} className="post-card">
+              <div className="post-author">Posted by: {profile?.name} {profile?.lastName}</div>
+              <div className="canvas-container">
+                <Canvas>
+                  <OrbitControls enableZoom={false} />
+                  <Sphere360 imageUrl={post.img_url} />
+                </Canvas>
+              </div>
+              <div className="post-caption">{post.caption}</div>
             </div>
           ))
         ) : (

@@ -1,11 +1,13 @@
 /* App.css */
 div {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', Arial, sans-serif;
 }
 
 h1 {
   text-align: center;
   margin-bottom: 20px;
+  font-size: 2.5rem;
+  color: #3f51b5;
 }
 
 div.post-container {
@@ -14,12 +16,14 @@ div.post-container {
   max-width: 400px;
   margin: 20px auto;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h3 {
   margin: 10px 0;
   text-align: center;
   font-weight: bold;
+  color: #3f51b5;
 }
 
 p {
@@ -27,4 +31,73 @@ p {
   text-align: center;
   font-size: 14px;
   color: #555;
+}
+
+.posts-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  width: 100%;
+}
+
+.post {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: white;
+  box-sizing: border-box;
+}
+
+.post-card {
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+}
+
+.canvas-container {
+  height: 400px; /* Adjust the height as needed */
+  width: 100%; /* Adjust the width as needed */
+  max-width: 1000px; /* Optional: set a max-width */
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+
+.post-author {
+  font-size: 1.1rem;
+  color: #3f51b5;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.post-caption {
+  font-size: 1rem;
+  color: #555;
+  font-style: italic;
+  line-height: 1.5;
+  margin-top: 12px;
 }

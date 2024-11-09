@@ -1,0 +1,48 @@
+/* src/styles/NavBar.css */
+.navbar {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 24px;
+  padding: 16px 24px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #666;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.nav-item:hover {
+  background-color: rgba(63, 81, 181, 0.05);
+  color: #3f51b5;
+}
+
+.nav-item.active {
+  background-color: #3f51b5;
+  color: white;
+}
+
+.nav-icon {
+  font-size: 1.2em;
+}
+
+.nav-text {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}

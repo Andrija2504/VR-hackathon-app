@@ -1,20 +1,19 @@
+// Update src/App.tsx
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import PostsPage from './components/PostsPage'; // Home page
-import ProfilePage from './components/ProfilePage'; // Profile page
+import NavBar from './components/NavBar';
+import PostsPage from './components/PostsPage';
+import ProfilePage from './components/ProfilePage';
 
 const App: React.FC = () => {
-  const loggedInUserId = 2; // Example logged-in user ID
+  const loggedInUserId = 2;
 
   return (
     <Router>
-      <nav style={{ padding: '10px' }}>
-        <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
-        <Link to="/profile">Profile</Link>
-      </nav>
+      <NavBar />
       <Routes>
-        <Route path="/" element={<PostsPage  loggedInUserId={loggedInUserId} />} />
+        <Route path="/" element={<PostsPage loggedInUserId={loggedInUserId} />} />
         <Route path="/profile" element={<ProfilePage loggedInUserId={loggedInUserId} />} />
       </Routes>
     </Router>

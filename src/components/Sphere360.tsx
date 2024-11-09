@@ -10,7 +10,7 @@ const Sphere360: React.FC<Sphere360Props> = ({ imageUrl }) => {
   const texture = useLoader(TextureLoader, imageUrl);
 
   return (
-    <Sphere args={[500, 60, 40]} scale={[-1, 1, 1]}>
+    <Sphere args={[500, 60, 40]} scale={[-1, 1, 1]}> {/* Adjust the args as needed */}
       <meshBasicMaterial map={texture} side={2} />
     </Sphere>
   );
