@@ -23,7 +23,7 @@ const finalPositionIcon = L.icon({
 });
 
 function SplineModel() {
-  const { scene } = useGLTF('./../public/3_d_paths_handwritten_copy.glb'); // Replace with the actual path to your .glb file
+  const { scene } = useGLTF('/3_d_paths_handwritten_copy.glb'); // Replace with the actual path to your .glb file
   return <primitive object={scene} />;
 }
 
