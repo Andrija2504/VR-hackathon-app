@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { gamePosts, posts } from '../data';
+import { gamePosts, games, posts } from '../data';
 import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents, Popup } from 'react-leaflet';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
@@ -8,6 +8,7 @@ import { Map, X } from 'lucide-react';
 import L, { LatLngBoundsExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Sphere360 from './Sphere360';
+import AudioPlayerWithFade from './AudioPlayerWithFade';
 
 const finalPositionIcon = L.icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -72,9 +73,23 @@ const GameDetailPage: React.FC = () => {
   const [finalPosition, setFinalPosition] = useState<[number, number] | null>(null);
   const [showMap, setShowMap] = useState(false);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
+  const currentGame = games.find(game => game.gameId === Number(gameId));
   const gamePostIds = gamePosts.filter(gp => gp.gameId === Number(gameId)).map(gp => gp.postId);
   const gameImages = posts.filter(post => gamePostIds.includes(post.id));
+
+  // Start playing audio when component mounts
+  useEffect(() => {
+    if (currentGame?.audioUrl) {
+      setIsAudioPlaying(true);
+    }
+
+    return () => {
+      // Cleanup: ensure audio stops when component unmounts
+      setIsAudioPlaying(false);
+    };
+  }, []);
 
   const handleGuess = () => {
     if (lat !== null && lng !== null && currentIndex < gameImages.length) {
@@ -124,7 +139,16 @@ const GameDetailPage: React.FC = () => {
     return null;
   };
 
+  useEffect(() => {
+    if (mapInstance) {
+      console.log('Map instance is ready:', mapInstance);
+      // You can perform any actions that depend on the map being ready here
+    }
+  }, [mapInstance]);
+
   if (currentIndex >= gameImages.length) {
+    // Fade out music when game is over
+    setIsAudioPlaying(false);
     return (
       <div className="game-over-container">
         <div className="material-card">
@@ -138,13 +162,6 @@ const GameDetailPage: React.FC = () => {
     );
   }
 
-  useEffect(() => {
-    if (mapInstance) {
-      console.log('Map instance is ready:', mapInstance);
-      // You can perform any actions that depend on the map being ready here
-    }
-  }, [mapInstance]);
-
   return (
     <div className="game-container">
       <div className="score-banner">
@@ -157,6 +174,18 @@ const GameDetailPage: React.FC = () => {
           <Canvas style={{ height: '800px' }}>
             <OrbitControls enableZoom={false} />
             <Sphere360 imageUrl={gameImages[currentIndex].img_url} />
+
+            {/* Info Button Marker */}
+            <mesh
+              visible
+              userData={{ info: 'This is an informational marker!' }}
+              position={[9, 10, 3]}
+              rotation={[Math.PI / 2, 0, 0]}
+              onClick={() => alert('This is your information message!')}
+            >
+              <sphereGeometry args={[1, 16, 16]} />
+              <meshStandardMaterial color="white" />
+            </mesh>
           </Canvas>
         </div>
 
@@ -236,6 +265,16 @@ const GameDetailPage: React.FC = () => {
               Close Map
             </button>
           </div>
+        )}
+
+        {/* Audio player - now tied to game rather than individual posts */}
+        {currentGame?.audioUrl && (
+          <AudioPlayerWithFade
+            audioUrl={currentGame.audioUrl}
+            isPlaying={isAudioPlaying}
+            fadeInDuration={2000}
+            fadeOutDuration={2000}
+          />
         )}
       </div>
     </div>

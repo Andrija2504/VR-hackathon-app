@@ -9,7 +9,7 @@ export const profiles = [
 ];
   
 export const posts = [
-  { id: 1, profileId: 1, img_url: '/apartment1.JPG', caption: 'A beautiful apartment view!', visibility: 1, latitude: 48.2082, longitude: 16.3738 }, // Example: Vienna, Austria
+  { id: 1, profileId: 1, img_url: '/apartment.JPG', caption: 'A beautiful apartment view!', visibility: 1, latitude: 48.2082, longitude: 16.3738 }, // Example: Vienna, Austria
   { id: 2, profileId: 2, img_url: '/beaverton sunset.JPG', caption: 'Stunning sunset in Beaverton.', visibility: 3, latitude: 45.4857, longitude: -122.8041 }, // Beaverton, OR
   { id: 3, profileId: 1, img_url: '/bend river.JPG', caption: 'Relaxing by the Bend River.', visibility: 2, latitude: 44.0582, longitude: -121.3153 }, // Bend, OR
   { id: 4, profileId: 3, img_url: '/bend.JPG', caption: 'Exploring Bend!', visibility: 3, latitude: 44.0582, longitude: -121.3153 }, // Bend, OR
@@ -60,7 +60,7 @@ export const friends = [
 
 // New games table
 export const games = [
-  { gameId: 1, name: 'Adventure Quest', createdByUserId: 1 },
+  { gameId: 1, name: 'Adventure Quest', createdByUserId: 1 , audioUrl: '/youtube_df-eLzao63I_audio.mp3'},
   //{ gameId: 2, name: 'Mystery Hunt', createdByUserId: 2 },
   //{ gameId: 3, name: 'Historical Explorer', createdByUserId: 3 }
 ];
