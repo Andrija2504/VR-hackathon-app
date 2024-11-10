@@ -153,16 +153,56 @@ body {
   border-radius: 12px;
 }
 
+/* Add to App.css */
 .score-banner {
-  background: white;
-  padding: 16px;
-  margin-bottom: 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+}
+
+.score-section {
+  display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.volume-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 150px;
+}
+
+.volume-btn {
+  padding: 4px 8px;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: #f0f0f0;
+  color: #333;
+  border: none;
+}
+
+.volume-slider {
+  flex: 1;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  position: relative;
+}
+
+.volume-level {
+  height: 100%;
+  background: #3f51b5;
+  border-radius: 2px;
+  transition: width 0.1s ease;
 }
 
 .score-label {

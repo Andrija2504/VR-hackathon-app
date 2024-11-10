@@ -102,24 +102,29 @@ const AudioPlayerWithFade: React.FC<AudioPlayerProps> = ({
     };
   }, [audioUrl]);
 
+
   return (
-    <div className="audio-player fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 bg-white rounded-lg shadow-lg p-4">
+    <div className="audio-controls">
       <audio
         ref={audioRef}
         src={audioUrl}
         onEnded={onEnded}
-        loop // Enable looping at the HTML level as well
+        loop
       />
-      <div className="flex items-center gap-4">
+      <div className="volume-controls">
         <button
-          onClick={() => setVolume(Math.max(0, volume - 0.1))}
-          className="p-2 rounded hover:bg-gray-100"
+          onClick={() => {
+            const newVolume = Math.max(0, volume - 0.1);
+            setVolume(newVolume);
+            if (audioRef.current) audioRef.current.volume = newVolume;
+          }}
+          className="volume-btn"
         >
           -
         </button>
-        <div className="flex-1 h-2 bg-gray-200 rounded">
+        <div className="volume-slider">
           <div
-            className="h-full bg-blue-500 rounded"
+            className="volume-level"
             style={{ width: `${volume * 100}%` }}
           />
         </div>
@@ -129,7 +134,7 @@ const AudioPlayerWithFade: React.FC<AudioPlayerProps> = ({
             setVolume(newVolume);
             if (audioRef.current) audioRef.current.volume = newVolume;
           }}
-          className="p-2 rounded hover:bg-gray-100"
+          className="volume-btn"
         >
           +
         </button>

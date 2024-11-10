@@ -165,8 +165,21 @@ const GameDetailPage: React.FC = () => {
   return (
     <div className="game-container">
       <div className="score-banner">
+        <div className='score-section'>
         <span className="score-label">Current Score:</span>
         <span className="score-value">{score}</span>
+        </div>
+
+
+        {/* Audio player - now tied to game rather than individual posts */}
+        {currentGame?.audioUrl && (
+          <AudioPlayerWithFade
+            audioUrl={currentGame.audioUrl}
+            isPlaying={isAudioPlaying}
+            fadeInDuration={2000}
+            fadeOutDuration={2000}
+          />
+        )}
       </div>
 
       <div className={`game-content ${showMap ? 'show-map' : ''}`}>
@@ -265,16 +278,6 @@ const GameDetailPage: React.FC = () => {
               Close Map
             </button>
           </div>
-        )}
-
-        {/* Audio player - now tied to game rather than individual posts */}
-        {currentGame?.audioUrl && (
-          <AudioPlayerWithFade
-            audioUrl={currentGame.audioUrl}
-            isPlaying={isAudioPlaying}
-            fadeInDuration={2000}
-            fadeOutDuration={2000}
-          />
         )}
       </div>
     </div>
