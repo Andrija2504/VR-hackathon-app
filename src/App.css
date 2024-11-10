@@ -9,7 +9,7 @@ div {
 
 h1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 5%;
   font-size: 2.5rem;
   color: #3f51b5;
 }
@@ -49,7 +49,7 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px; /* Increased from 1200px to give some padding */
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
@@ -74,11 +74,13 @@ body {
   box-sizing: border-box;
 }
 
+/* Increase post width */
 .post-card {
   border: 1px solid #ccc;
   border-radius: 12px;
   padding: 20px;
-  max-width: 800px;
+  max-width: 90%; /* Increased from 800px */
+  width: 100%; /* Ensure it takes full width up to max-width */
   margin: 0 auto;
   background: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -89,10 +91,11 @@ body {
   transform: translateY(-2px);
 }
 
+/* Adjust canvas container to match */
 .canvas-container {
-  height: 400px; /* Adjust the height as needed */
-  width: 100%; /* Adjust the width as needed */
-  max-width: 1000px; /* Optional: set a max-width */
+  height: 600px; /* Increased from 400px for better viewing */
+  width: 100%;
+  max-width: 1200px; /* Match post-card max-width */
   border-radius: 8px;
   overflow: hidden;
   margin: 16px 0;
@@ -336,12 +339,25 @@ body {
 .material-button.ar-button {
   position: absolute;
   top: 24px;
-  right: 24px;
+  right: 24px; /* Changed from right: 24px */
   z-index: 100;
   margin: 0;
 }
 
+.material-button.ar-button:hover {
+  background: #303f9f;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
 @media (max-width: 768px) {
+
+  .material-button.ar-button {
+    top: 16px;
+    left: 16px;
+    padding: 8px 16px; /* Slightly smaller on mobile */
+    font-size: 0.9rem;
+  }
+
   .game-container {
     padding: 0;
   }
@@ -353,7 +369,11 @@ body {
     overflow: hidden;
     margin-top: 56px; /* Height of score banner */
   }
-
+ 
+  .canvas-container {
+    height: 400px; /* Smaller height on mobile */
+    border-radius: 0;
+  }
 
   .map-controls {
     position: fixed;
@@ -449,14 +469,10 @@ body {
   }
   
   .post-card {
+    max-width: 90%;
     border-radius: 0;
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
-    border: none;
-    border-bottom: 1px solid #dbdbdb;
-    transform: none;
   }
+
   
   .post-container {
     max-width: 100%;

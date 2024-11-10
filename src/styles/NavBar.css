@@ -6,19 +6,19 @@
   bottom: 10px; /* Adjust this to control height above bottom */
   z-index: 1000;
   border-radius: 16px; /* Rounded corners */
-  width: calc(100% - 20px); /* Add padding from sides if necessary */
+  width: 60%; /* Changed from calc(100% - 20px) to 60% */
   margin: 0 auto;
   left: 50%;
   transform: translateX(-50%); /* Center horizontally */
-  padding: 8px 16px; /* Padding for spacing inside */
+  padding: 4px 12px; /* Reduced padding */
 }
 
 .navbar-container {
-  max-width: 1200px;
+  max-width: 800px; /* Reduced from 1200px */
   margin: 0 auto;
   display: flex;
-  gap: 24px;
-  padding: 12px 24px;
+  gap: 16px; /* Reduced gap */
+  padding: 8px 16px; /* Reduced padding */
   justify-content: space-around;
 }
 
@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
+  padding: 8px 16px; /* Reduced padding */
   text-decoration: none;
   color: #666;
   border-radius: 8px;
@@ -50,28 +50,29 @@
 }
 
 .nav-icon {
-  width: 32px;
-  height: 32px;
+  width: 24px; /* Smaller icons */
+  height: 24px;
   transition: filter 0.2s ease-in-out;
 }
 
 /* Mobile styles */
 @media (max-width: 768px) {
   .navbar {
+    width: 90%; /* Wider on mobile but still centered */
     max-width: 90%; /* Optional: Limit max width on smaller screens */
-    padding: 8px 12px;
+    padding: 4px 8px;
   }
 
   .nav-item {
     flex-direction: column;
     align-items: center;
-    padding: 8px;
+    padding: 6px;
     flex: 1;
   }
 
   .nav-icon {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 4px;
+    width: 20px; /* Even smaller on mobile */
+    height: 20px;
+    margin-bottom: 2px;
   }
 }
