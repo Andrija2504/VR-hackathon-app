@@ -1,7 +1,7 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { profiles, posts, friends, games, gamePosts, playedGames } from '../data';
+import { profiles, posts, friends, gamePosts, playedGames } from '../data';
 import Sphere360 from './Sphere360';
 
 interface PostsPageProps {
