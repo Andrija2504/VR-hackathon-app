@@ -12,7 +12,9 @@
   "dependencies": {
     "@react-three/drei": "^9.115.0",
     "@react-three/fiber": "^8.17.10",
+    "@react-three/xr": "^6.4.5",
     "@splinetool/react-spline": "^4.0.0",
+    "@types/three": "^0.169.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.456.0",
     "photo-sphere-viewer": "^4.8.1",

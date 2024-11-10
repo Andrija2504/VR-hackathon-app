@@ -9,6 +9,9 @@ import L, { LatLngBoundsExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Sphere360 from './Sphere360';
 import AudioPlayerWithFade from './AudioPlayerWithFade';
+import { XR, createXRStore } from '@react-three/xr';
+
+const xrStore = createXRStore();
 
 const finalPositionIcon = L.icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -104,6 +107,7 @@ const GameDetailPage: React.FC = () => {
       // Cleanup: ensure audio stops when component unmounts
       setIsAudioPlaying(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleGuess = () => {
@@ -199,8 +203,18 @@ const GameDetailPage: React.FC = () => {
 
       <div className={`game-content ${showMap ? 'show-map' : ''}`}>
         <div className="material-card viewer-card">
+          <button
+            className="material-button"
+            onClick={() => xrStore.enterAR()}
+          >
+            Enter AR
+          </button>
           <Canvas style={{ height: '800px' }}>
-            <OrbitControls enableZoom={false} />
+            <XR store={xrStore}>
+              <OrbitControls enableZoom={false}
+                enablePan={false}
+                minPolarAngle={Math.PI / 2.5} // Limit vertical rotation
+                maxPolarAngle={Math.PI / 1.5} />
             <Sphere360 imageUrl={gameImages[currentIndex].img_url} />
 
             {/* Info Button Marker */}
@@ -223,6 +237,7 @@ const GameDetailPage: React.FC = () => {
               <SplineModel/>
               <meshStandardMaterial color="white" />
             </mesh>
+            </XR>
           </Canvas>
         </div>
 
