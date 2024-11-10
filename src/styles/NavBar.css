@@ -1,12 +1,16 @@
 /* src/styles/NavBar.css */
 .navbar {
   background-color: #ffffff;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1); /* Increased shadow intensity */
   position: fixed;
-  bottom: 0;
+  bottom: 10px; /* Adjust this to control height above bottom */
   z-index: 1000;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  width: 100%;
+  border-radius: 16px; /* Rounded corners */
+  width: calc(100% - 20px); /* Add padding from sides if necessary */
+  margin: 0 auto;
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  padding: 8px 16px; /* Padding for spacing inside */
 }
 
 .navbar-container {
@@ -21,7 +25,7 @@
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   padding: 10px 20px;
   text-decoration: none;
   color: #666;
@@ -30,30 +34,32 @@
   font-weight: 500;
 }
 
-.nav-item:hover {
-  background-color: rgba(63, 81, 181, 0.05);
-  color: #3f51b5;
+/* Active state for the nav item */
+.nav-item.active {
+  background-color: lightgray; /* Change background color to light gray */
+  color: black; /* Optional: change text/icon color if needed for contrast */
 }
 
-.nav-item.active {
-  background-color: #3f51b5;
-  color: white;
+.nav-item.active .nav-icon {
+  filter: hue-rotate(0deg) saturate(100%) brightness(1.2); /* Adjust filter to achieve red color */
+  fill: red; /* Apply red fill to SVG icons if applicable */
+}
+
+.nav-item:hover .nav-icon {
+  filter: brightness(0.8);
 }
 
 .nav-icon {
-  font-size: 1.2em;
-}
-
-.nav-text {
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  width: 32px;
+  height: 32px;
+  transition: filter 0.2s ease-in-out;
 }
 
 /* Mobile styles */
 @media (max-width: 768px) {
-  .navbar-container {
-    gap: 0;
-    padding: 8px 4px;
+  .navbar {
+    max-width: 90%; /* Optional: Limit max width on smaller screens */
+    padding: 8px 12px;
   }
 
   .nav-item {
@@ -64,11 +70,8 @@
   }
 
   .nav-icon {
-    font-size: 24px;
+    width: 24px;
+    height: 24px;
     margin-bottom: 4px;
-  }
-
-  .nav-text {
-    font-size: 12px;
   }
 }

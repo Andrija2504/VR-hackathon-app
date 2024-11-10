@@ -61,14 +61,14 @@ const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId }) => {
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <div key={post.id} className="post-card">
-              <div className="post-author">Posted by: {getProfileName(post.profileId)}</div>
+              <div className="post-author">{post.location}</div>
               <div className="canvas-container">
                 <Canvas>
                   <OrbitControls enableZoom={false} />
                   <Sphere360 imageUrl={post.img_url} />
                 </Canvas>
               </div>
-              <div className="post-caption">{post.caption}</div>
+              <div className="post-caption"><b>{getProfileName(post.profileId)}</b>: {post.caption}</div>
             </div>
           ))
         ) : (

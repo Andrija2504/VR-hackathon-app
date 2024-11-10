@@ -287,6 +287,52 @@ body {
   pointer-events: none;
 }
 
+.toggle-container {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.toggle-container input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  background-color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, border 0.2s;
+  border: 2px solid #ccc; /* Default border color */
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #808080; /* Default knob color */
+  border-radius: 50%;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.toggle-input:checked + .toggle-slider {
+  background-color: white; /* Background color when active */
+  border: 2px solid red; /* Active border color */
+}
+
+.toggle-input:checked + .toggle-slider::before {
+  transform: translateX(14px);
+  background-color: red; /* Active knob color */
+}
+
+
 @media (max-width: 768px) {
   .game-container {
     padding: 0;

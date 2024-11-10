@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { gamePosts, games, posts } from '../data';
 import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents, Popup } from 'react-leaflet';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import { Map, X } from 'lucide-react';
+import { OrbitControls, useGLTF } from '@react-three/drei';
+import { Map } from 'lucide-react';
 import L, { LatLngBoundsExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Sphere360 from './Sphere360';
@@ -18,6 +18,11 @@ const finalPositionIcon = L.icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
+
+function SplineModel() {
+  const { scene } = useGLTF('./../public/3_d_paths_handwritten_copy.glb'); // Replace with the actual path to your .glb file
+  return <primitive object={scene} />;
+}
 
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
   const R = 6371e3;
@@ -74,6 +79,15 @@ const GameDetailPage: React.FC = () => {
   const [showMap, setShowMap] = useState(false);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const mapRef = useRef<L.Map | null>(null);
+
+  const handleMapInit = () => {
+    if (mapRef.current) {
+      setMapInstance(mapRef.current); // Set map instance in state
+      console.log('Map instance created:', mapRef.current);
+      // You can perform any map-related operations here
+    }
+  };
 
   const currentGame = games.find(game => game.gameId === Number(gameId));
   const gamePostIds = gamePosts.filter(gp => gp.gameId === Number(gameId)).map(gp => gp.postId);
@@ -81,6 +95,7 @@ const GameDetailPage: React.FC = () => {
 
   // Start playing audio when component mounts
   useEffect(() => {
+    console.log(currentGame)
     if (currentGame?.audioUrl) {
       setIsAudioPlaying(true);
     }
@@ -192,11 +207,20 @@ const GameDetailPage: React.FC = () => {
             <mesh
               visible
               userData={{ info: 'This is an informational marker!' }}
-              position={[9, 10, 3]}
-              rotation={[Math.PI / 2, 0, 0]}
-              onClick={() => alert('This is your information message!')}
+              position={[100, 20, -80]}
+              rotation={[0, -45, 0]}
+              onClick={() => {
+                // Find the hint for the current post
+                const currentPost = posts[currentIndex];
+                const hint = currentPost ? currentPost.hint : 'No hint available';
+                alert(`Hint: ${hint}`); // Replace this with a modal if needed
+              }}
             >
-              <sphereGeometry args={[1, 16, 16]} />
+              {/* <sphereGeometry args={[1, 16, 16]} /> */}
+              {/* <Spline 
+                scene="https://prod.spline.design/sw30SWsPiOInOYgb/scene.splinecode"  
+              />  */}
+              <SplineModel/>
               <meshStandardMaterial color="white" />
             </mesh>
           </Canvas>
@@ -204,14 +228,16 @@ const GameDetailPage: React.FC = () => {
 
         <div className="material-card map-card">
           <MapContainer 
-          center={[47.5162, 14.5501]} 
-          zoom={4} 
-          style={{ height: '800px', width: '100%' }} 
-          whenReady={(event) => {
-            const map = event.target; // Access the map instance from the event
-            console.log('Map instance created:', map);
-            setMapInstance(map); // Store the reference in state
-          }}> {/* // Capture the map instance */}
+            center={[47.5162, 14.5501]} 
+            zoom={4} 
+            style={{ height: '800px', width: '100%' }} 
+            ref={(mapInstance) => {
+              if (mapInstance && !mapRef.current) {
+                mapRef.current = mapInstance;
+                handleMapInit(); // Call the initialization function
+              }
+            }}
+          > {/* // Capture the map instance */}
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; OpenStreetMap contributors"
