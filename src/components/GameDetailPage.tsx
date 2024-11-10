@@ -4,9 +4,10 @@ import { gamePosts, posts } from '../data';
 import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents, Popup } from 'react-leaflet';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import { Map, X } from 'lucide-react'; // Import icons for the toggle button
 import L, { LatLngBoundsExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import Sphere360 from './Sphere360'; // Assuming Sphere360 component is available
+import Sphere360 from './Sphere360';
 
 // Add at the top of the file with other imports
 const finalPositionIcon = L.icon({
@@ -72,6 +73,7 @@ const GameDetailPage: React.FC = () => {
   const [polylineCoords, setPolylineCoords] = useState<[number, number][]>([]);
   const [showFinalPosition, setShowFinalPosition] = useState(false);
   const [finalPosition, setFinalPosition] = useState<[number, number] | null>(null);
+  const [showMap, setShowMap] = useState(false);
 
   // Filter the posts for the current game
   const gamePostIds = gamePosts.filter(gp => gp.gameId === Number(gameId)).map(gp => gp.postId);
@@ -134,9 +136,9 @@ const GameDetailPage: React.FC = () => {
 
   return (
     <div className="game-container">
-      <div className="game-content">
+      <div className={`game-content ${showMap ? 'show-map' : ''}`}>
         <div className="material-card viewer-card">
-          <Canvas style={{ height: '400px' }}>
+          <Canvas style={{ height: '800px' }}>
             <OrbitControls enableZoom={false} />
             <Sphere360 imageUrl={gameImages[currentIndex].img_url} />
           </Canvas>
@@ -146,8 +148,19 @@ const GameDetailPage: React.FC = () => {
           </div>
         </div>
 
+        <button
+          className="mobile-map-toggle"
+          onClick={() => setShowMap(!showMap)}
+        >
+          {showMap ? (
+            <><X className="w-6 h-6" /> Close Map</>
+          ) : (
+            <><Map className="w-6 h-6" /> Make Guess</>
+          )}
+        </button>
+
         <div className="material-card map-card">
-          <MapContainer center={[47.5162, 14.5501]} zoom={4} style={{ height: '400px', width: '100%' }}>
+          <MapContainer center={[47.5162, 14.5501]} zoom={4} style={{ height: '800px', width: '100%' }}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; OpenStreetMap contributors"

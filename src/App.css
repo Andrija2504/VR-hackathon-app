@@ -3,6 +3,10 @@ div {
   font-family: 'Roboto', Arial, sans-serif;
 }
 
+:root {
+  --navbar-height: 76px; /* 60px for content + 16px for padding */
+}
+
 h1 {
   text-align: center;
   margin-bottom: 20px;
@@ -31,6 +35,13 @@ p {
   text-align: center;
   font-size: 14px;
   color: #555;
+}
+
+body {
+  min-height: 100vh;
+  padding-bottom: 80px; /* Height of navbar */
+  position: relative;
+  box-sizing: border-box;
 }
 
 .posts-page {
@@ -106,6 +117,8 @@ p {
   padding: 24px;
   max-width: 1400px;
   margin: 0 auto;
+  min-height: calc(100vh - var(--navbar-height));
+  box-sizing: border-box;
 }
 
 .game-content {
@@ -196,8 +209,146 @@ p {
   margin-top: 16px;
 }
 
+.mobile-map-toggle {
+  display: none;
+  position: fixed;
+  bottom: calc(var(--navbar-height) + 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  background: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-map-toggle:hover {
+  background: #303f9f;
+}
+
 @media (max-width: 768px) {
+  .game-container {
+    padding: 0;
+  }
+
   .game-content {
     grid-template-columns: 1fr;
+    position: relative;
+    height: calc(100vh - var(--navbar-height));
+    overflow: hidden;
+  }
+
+  .mobile-map-toggle {
+    display: flex;
+  }
+
+  .map-card {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - var(--navbar-height));
+    z-index: 100;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .map-card .material-button {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+  }
+
+  .show-map .map-card {
+    transform: translateY(0);
+  }
+
+  .viewer-card {
+    height: 100%;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .viewer-card Canvas {
+    height: calc(100vh - var(--navbar-height) - 80px) !important;
+  }
+
+  /* Keep score banner above map but below toggle button */
+  .score-banner {
+    position: fixed;
+    bottom: var(--navbar-height);
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 99;
+    background: white;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Adjust map container to account for guess button */
+  .leaflet-container {
+    height: calc(100% - 80px) !important;
+  }
+
+  body {
+    background: white;
+    padding-bottom: 80px; /* Height of bottom nav */
+  }
+  
+  .posts-page {
+    padding: 0;
+    margin: 0;
+  }
+  
+  .posts-container {
+    gap: 0;
+    margin-bottom: 80px;
+  }
+  
+  .post-card {
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    border: none;
+    border-bottom: 1px solid #dbdbdb;
+    transform: none;
+  }
+  
+  .post-container {
+    max-width: 100%;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  /* Reset desktop styles */
+  .material-card {
+    box-shadow: none;
+    border-radius: 0;
+  }
+  
+  .material-card:hover {
+    box-shadow: none;
+  }
+  
+  h3 {
+    font-size: 14px;
+    margin: 0;
+    text-align: left;
+  }
+  
+  p {
+    padding: 0;
+    text-align: left;
   }
 }

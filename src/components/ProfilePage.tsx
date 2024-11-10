@@ -22,7 +22,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ loggedInUserId }) => {
   return (
     <div className="posts-page">
       <h1>{profile ? `${profile.name} ${profile.lastName}` : 'User'}'s Profile</h1>
-      
+
       <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
         <button onClick={() => setSelectedVisibility(1)}>Private</button>
         <button onClick={() => setSelectedVisibility(2)}>Friends</button>

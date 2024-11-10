@@ -1,7 +1,7 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { profiles, posts, friends, games, gamePosts, playedGames } from '../data';
+import { profiles, posts, friends, gamePosts, playedGames } from '../data';
 import Sphere360 from './Sphere360';
 
 interface PostsPageProps {
@@ -55,9 +55,9 @@ const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId }) => {
   });
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="posts-page">
       <h1>Feel the Austrian "Lebensgefühl"</h1>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+      <div className="posts-container">
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <div key={post.id} className="post-card">
