@@ -64,26 +64,30 @@ const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId }) => {
       <h1>Feel the Austrian "Lebensgefühl"</h1>
       <div className="posts-container">
         {filteredPosts.length > 0 ? (
-          filteredPosts.map((post) => (
-            <div key={post.id} className="post-card">
-              <div className="post-author">{post.location}</div>
-              <div className="canvas-container">
-                <button
-                  className="material-button ar-button"
-                  onClick={() => xrStore.enterAR()}
-                >
-                  Enter AR
-                </button>
-                <Canvas>
-                  <XR store={xrStore}>
-                    <OrbitControls enableZoom={false} />
-                    <Sphere360 imageUrl={post.img_url} />
-                  </XR>
-                </Canvas>
+          filteredPosts.map((post) => {
+            // Create a separate XR store for each post
+            const xrStore = createXRStore();
+            return (
+              <div key={post.id} className="post-card">
+                <div className="post-author">{post.location}</div>
+                <div className="canvas-container">
+                  <button
+                    className="material-button ar-button"
+                    onClick={() => xrStore.enterAR()}
+                  >
+                    Enter AR
+                  </button>
+                  <Canvas>
+                    <XR store={xrStore}>
+                      <OrbitControls enableZoom={false} />
+                      <Sphere360 imageUrl={post.img_url} />
+                    </XR>
+                  </Canvas>
+                </div>
+                <div className="post-caption"><b>{getProfileName(post.profileId)}</b>: {post.caption}</div>
               </div>
-              <div className="post-caption"><b>{getProfileName(post.profileId)}</b>: {post.caption}</div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <p style={{ textAlign: 'center' }}>No posts to display.</p>
         )}
