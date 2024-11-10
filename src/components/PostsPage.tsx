@@ -3,6 +3,9 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { profiles, posts, friends, gamePosts, playedGames } from '../data';
 import Sphere360 from './Sphere360';
+import { XR, createXRStore } from '@react-three/xr';
+
+const xrStore = createXRStore();
 
 interface PostsPageProps {
   loggedInUserId: number;
@@ -63,9 +66,17 @@ const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId }) => {
             <div key={post.id} className="post-card">
               <div className="post-author">{post.location}</div>
               <div className="canvas-container">
+                <button
+                  className="material-button ar-button"
+                  onClick={() => xrStore.enterAR()}
+                >
+                  Enter AR
+                </button>
                 <Canvas>
-                  <OrbitControls enableZoom={false} />
-                  <Sphere360 imageUrl={post.img_url} />
+                  <XR store={xrStore}>
+                    <OrbitControls enableZoom={false} />
+                    <Sphere360 imageUrl={post.img_url} />
+                  </XR>
                 </Canvas>
               </div>
               <div className="post-caption"><b>{getProfileName(post.profileId)}</b>: {post.caption}</div>

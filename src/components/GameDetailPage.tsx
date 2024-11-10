@@ -10,9 +10,9 @@ import L, { LatLngBoundsExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Sphere360 from './Sphere360';
 import AudioPlayerWithFade from './AudioPlayerWithFade';
-import { XR, createXRStore } from '@react-three/xr';
+// import { XR, createXRStore } from '@react-three/xr';
 
-const xrStore = createXRStore();
+// const xrStore = createXRStore();
 
 const finalPositionIcon = L.icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -204,14 +204,14 @@ const GameDetailPage: React.FC = () => {
 
       <div className={`game-content ${showMap ? 'show-map' : ''}`}>
         <div className="material-card viewer-card">
-          <button
+          {/* <button
             className="material-button"
             onClick={() => xrStore.enterAR()}
           >
             Enter AR
-          </button>
+          </button> */}
           <Canvas style={{ height: '800px' }}>
-            <XR store={xrStore}>
+            {/* <XR store={xrStore}> */}
               <OrbitControls enableZoom={false}
                 enablePan={false}
                 minPolarAngle={Math.PI / 2.5} // Limit vertical rotation
@@ -238,7 +238,7 @@ const GameDetailPage: React.FC = () => {
                 {/* <SplineModel/> */}
               <meshStandardMaterial color="white" />
             </mesh>
-            </XR>
+            {/* </XR> */}
           </Canvas>
         </div>
 
