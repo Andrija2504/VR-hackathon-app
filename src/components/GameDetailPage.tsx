@@ -71,6 +71,7 @@ const GameDetailPage: React.FC = () => {
   const [showFinalPosition, setShowFinalPosition] = useState(false);
   const [finalPosition, setFinalPosition] = useState<[number, number] | null>(null);
   const [showMap, setShowMap] = useState(false);
+  const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
 
   const gamePostIds = gamePosts.filter(gp => gp.gameId === Number(gameId)).map(gp => gp.postId);
   const gameImages = posts.filter(post => gamePostIds.includes(post.id));
@@ -98,6 +99,16 @@ const GameDetailPage: React.FC = () => {
         setPolylineCoords([]);
         setShowFinalPosition(false);
         setFinalPosition(null);
+        if (showMap) {
+          setShowMap(false);
+        }
+        
+        // Reset the map view using the captured map instance
+        if (mapInstance) {
+          mapInstance.setView([47.5162, 14.5501], 4);
+        } else {
+          console.warn('Map instance is not available.');
+        }
       }, 5000);
     }
   };
@@ -127,6 +138,13 @@ const GameDetailPage: React.FC = () => {
     );
   }
 
+  useEffect(() => {
+    if (mapInstance) {
+      console.log('Map instance is ready:', mapInstance);
+      // You can perform any actions that depend on the map being ready here
+    }
+  }, [mapInstance]);
+
   return (
     <div className="game-container">
       <div className="score-banner">
@@ -143,7 +161,15 @@ const GameDetailPage: React.FC = () => {
         </div>
 
         <div className="material-card map-card">
-          <MapContainer center={[47.5162, 14.5501]} zoom={4} style={{ height: '800px', width: '100%' }}>
+          <MapContainer 
+          center={[47.5162, 14.5501]} 
+          zoom={4} 
+          style={{ height: '800px', width: '100%' }} 
+          whenReady={(event) => {
+            const map = event.target; // Access the map instance from the event
+            console.log('Map instance created:', map);
+            setMapInstance(map); // Store the reference in state
+          }}> {/* // Capture the map instance */}
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; OpenStreetMap contributors"
@@ -182,16 +208,15 @@ const GameDetailPage: React.FC = () => {
         </div>
 
         {/* Mobile toggle */}
-        <button
-          className="mobile-map-toggle"
-          onClick={() => setShowMap(!showMap)}
-        >
-          {showMap ? (
-            <><X className="w-6 h-6" /> Close Map</>
-          ) : (
+        { !showMap && (
+          <button
+            className="mobile-map-toggle"
+            onClick={() => setShowMap(!showMap)}
+          >
             <><Map className="w-6 h-6" /> Make Guess</>
-          )}
-        </button>
+          </button>
+        )
+        }
 
         {/* Mobile controls */}
         {showMap && (
@@ -205,7 +230,8 @@ const GameDetailPage: React.FC = () => {
             </button>
             <button
               onClick={() => setShowMap(false)}
-              className="material-button"
+              disabled={isButtonDisabled}
+              className={`material-button ${(isButtonDisabled) ? 'disabled' : ''}`}
             >
               Close Map
             </button>
