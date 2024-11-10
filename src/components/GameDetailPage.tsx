@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { gamePosts, games, posts } from '../data';
 import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents, Popup } from 'react-leaflet';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
+//import { OrbitControls, useGLTF } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import { Map } from 'lucide-react';
 import L, { LatLngBoundsExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -22,10 +23,10 @@ const finalPositionIcon = L.icon({
   shadowSize: [41, 41]
 });
 
-function SplineModel() {
-  const { scene } = useGLTF('/3_d_paths_handwritten_copy.glb'); // Replace with the actual path to your .glb file
-  return <primitive object={scene} />;
-}
+// function SplineModel() {
+//   const { scene } = useGLTF('/3_d_paths_handwritten_copy.glb'); // Replace with the actual path to your .glb file
+//   return <primitive object={scene} />;
+// }
 
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
   const R = 6371e3;
@@ -230,11 +231,11 @@ const GameDetailPage: React.FC = () => {
                 alert(`Hint: ${hint}`); // Replace this with a modal if needed
               }}
             >
-              {/* <sphereGeometry args={[1, 16, 16]} /> */}
+                <sphereGeometry args={[1, 16, 16]} />
               {/* <Spline 
                 scene="https://prod.spline.design/sw30SWsPiOInOYgb/scene.splinecode"  
               />  */}
-              <SplineModel/>
+                {/* <SplineModel/> */}
               <meshStandardMaterial color="white" />
             </mesh>
             </XR>
