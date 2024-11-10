@@ -4,12 +4,11 @@ import { gamePosts, posts } from '../data';
 import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents, Popup } from 'react-leaflet';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { Map, X } from 'lucide-react'; // Import icons for the toggle button
+import { Map, X } from 'lucide-react';
 import L, { LatLngBoundsExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Sphere360 from './Sphere360';
 
-// Add at the top of the file with other imports
 const finalPositionIcon = L.icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -19,9 +18,8 @@ const finalPositionIcon = L.icon({
   shadowSize: [41, 41]
 });
 
-// Calculate distance using the Haversine formula
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-  const R = 6371e3; // Earth's radius in meters
+  const R = 6371e3;
   const φ1 = (lat1 * Math.PI) / 180;
   const φ2 = (lat2 * Math.PI) / 180;
   const Δφ = ((lat2 - lat1) * Math.PI) / 180;
@@ -33,8 +31,7 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
     Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  const distance = R * c; // Distance in meters
-  return distance;
+  return R * c;
 };
 
 interface LocationMarkerProps {
@@ -48,7 +45,7 @@ const LocationMarker: React.FC<LocationMarkerProps> = ({ lat, lng, onLocationSel
 
   useEffect(() => {
     if (lat === null || lng === null) {
-      setPosition(null); // Reset marker position when coordinates are cleared
+      setPosition(null);
     }
   }, [lat, lng]);
 
@@ -75,7 +72,6 @@ const GameDetailPage: React.FC = () => {
   const [finalPosition, setFinalPosition] = useState<[number, number] | null>(null);
   const [showMap, setShowMap] = useState(false);
 
-  // Filter the posts for the current game
   const gamePostIds = gamePosts.filter(gp => gp.gameId === Number(gameId)).map(gp => gp.postId);
   const gameImages = posts.filter(post => gamePostIds.includes(post.id));
 
@@ -85,11 +81,9 @@ const GameDetailPage: React.FC = () => {
       const correctLat = currentPost.latitude;
       const correctLng = currentPost.longitude;
 
-      // Set the final position immediately after guess
       setFinalPosition([correctLat, correctLng]);
       setShowFinalPosition(true);
 
-      // Rest of existing handleGuess logic...
       const distance = calculateDistance(lat, lng, correctLat, correctLng);
       const scoreForRound = Math.max(0, (20037.5 - (distance / 1000)) / 4007.5);
       setScore(prevScore => prevScore + Math.floor(scoreForRound));
@@ -108,7 +102,6 @@ const GameDetailPage: React.FC = () => {
     }
   };
 
-  // Function to fit the map bounds
   const FitMapBounds = ({ coordinates }: { coordinates: [number, number][] }) => {
     const map = useMap();
     useEffect(() => {
@@ -136,28 +129,18 @@ const GameDetailPage: React.FC = () => {
 
   return (
     <div className="game-container">
+      <div className="score-banner">
+        <span className="score-label">Current Score:</span>
+        <span className="score-value">{score}</span>
+      </div>
+
       <div className={`game-content ${showMap ? 'show-map' : ''}`}>
         <div className="material-card viewer-card">
           <Canvas style={{ height: '800px' }}>
             <OrbitControls enableZoom={false} />
             <Sphere360 imageUrl={gameImages[currentIndex].img_url} />
           </Canvas>
-          <div className="score-banner">
-            <span className="score-label">Current Score:</span>
-            <span className="score-value">{score}</span>
-          </div>
         </div>
-
-        <button
-          className="mobile-map-toggle"
-          onClick={() => setShowMap(!showMap)}
-        >
-          {showMap ? (
-            <><X className="w-6 h-6" /> Close Map</>
-          ) : (
-            <><Map className="w-6 h-6" /> Make Guess</>
-          )}
-        </button>
 
         <div className="material-card map-card">
           <MapContainer center={[47.5162, 14.5501]} zoom={4} style={{ height: '800px', width: '100%' }}>
@@ -165,10 +148,14 @@ const GameDetailPage: React.FC = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; OpenStreetMap contributors"
             />
-            <LocationMarker lat={lat} lng={lng} onLocationSelected={(lat, lng) => {
-              setLat(lat);
-              setLng(lng);
-            }} />
+            <LocationMarker
+              lat={lat}
+              lng={lng}
+              onLocationSelected={(lat, lng) => {
+                setLat(lat);
+                setLng(lng);
+              }}
+            />
             {showFinalPosition && finalPosition && (
               <Marker position={finalPosition} icon={finalPositionIcon}>
                 <Popup>Correct Location</Popup>
@@ -181,14 +168,49 @@ const GameDetailPage: React.FC = () => {
               </>
             )}
           </MapContainer>
-          <button
-            onClick={handleGuess}
-            disabled={isButtonDisabled || lat === null || lng === null}
-            className={`material-button ${(isButtonDisabled || lat === null || lng === null) ? 'disabled' : ''}`}
-          >
-            Make a Guess
-          </button>
+
+          {/* Desktop controls */}
+          <div className="map-controls desktop-map-controls">
+            <button
+              onClick={handleGuess}
+              disabled={isButtonDisabled || lat === null || lng === null}
+              className={`material-button ${(isButtonDisabled || lat === null || lng === null) ? 'disabled' : ''}`}
+            >
+              Submit Guess
+            </button>
+          </div>
         </div>
+
+        {/* Mobile toggle */}
+        <button
+          className="mobile-map-toggle"
+          onClick={() => setShowMap(!showMap)}
+        >
+          {showMap ? (
+            <><X className="w-6 h-6" /> Close Map</>
+          ) : (
+            <><Map className="w-6 h-6" /> Make Guess</>
+          )}
+        </button>
+
+        {/* Mobile controls */}
+        {showMap && (
+          <div className="map-controls">
+            <button
+              onClick={handleGuess}
+              disabled={isButtonDisabled || lat === null || lng === null}
+              className={`material-button ${(isButtonDisabled || lat === null || lng === null) ? 'disabled' : ''}`}
+            >
+              Submit Guess
+            </button>
+            <button
+              onClick={() => setShowMap(false)}
+              className="material-button"
+            >
+              Close Map
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

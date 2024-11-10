@@ -140,12 +140,11 @@ body {
 }
 
 .viewer-card {
-  position: relative;
+  height: 100%;
 }
 
 .map-card {
-  display: flex;
-  flex-direction: column;
+  height: 100%;
 }
 
 .map-container {
@@ -155,8 +154,11 @@ body {
 }
 
 .score-banner {
-  background: #f5f5f5;
-  padding: 20px;
+  background: white;
+  padding: 16px;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -209,30 +211,34 @@ body {
   margin-top: 16px;
 }
 
-.mobile-map-toggle {
-  display: none;
-  position: fixed;
-  bottom: calc(var(--navbar-height) + 20px);
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 12px 24px;
-  background: #3f51b5;
-  color: white;
-  border: none;
-  border-radius: 24px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: background 0.3s ease;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.map-controls {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 12px;
+  padding: 16px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.mobile-map-toggle:hover {
-  background: #303f9f;
+.map-controls button {
+  flex: 1;
+}
+
+.mobile-map-toggle {
+  display: none;
+}
+
+.map-card {
+  position: relative;
+  height: 100%;
+}
+
+.leaflet-container {
+  height: calc(100% - 76px) !important; /* Adjust for the control buttons height */
 }
 
 @media (max-width: 768px) {
@@ -245,18 +251,46 @@ body {
     position: relative;
     height: calc(100vh - var(--navbar-height));
     overflow: hidden;
+    margin-top: 56px; /* Height of score banner */
+  }
+
+
+  .map-controls {
+    position: fixed;
+    bottom: var(--navbar-height);
   }
 
   .mobile-map-toggle {
     display: flex;
+    position: fixed;
+    bottom: calc(var(--navbar-height) + 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    background: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .desktop-map-controls {
+    display: none;
   }
 
   .map-card {
     position: fixed;
-    top: 0;
+    top: 56px; /* Height of score banner */
     left: 0;
     width: 100%;
-    height: calc(100vh - var(--navbar-height));
+    height: calc(100vh - var(--navbar-height) - 56px);
     z-index: 100;
     transform: translateY(100%);
     transition: transform 0.3s ease;
@@ -281,23 +315,22 @@ body {
   }
 
   .viewer-card Canvas {
-    height: calc(100vh - var(--navbar-height) - 80px) !important;
+    height: calc(100vh - var(--navbar-height) - 56px) !important;
   }
 
   /* Keep score banner above map but below toggle button */
   .score-banner {
     position: fixed;
-    bottom: var(--navbar-height);
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 99;
-    background: white;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    border-radius: 0;
+    margin-bottom: 0;
   }
-
   /* Adjust map container to account for guess button */
   .leaflet-container {
-    height: calc(100% - 80px) !important;
+    height: calc(100% - 140px) !important; /* Adjust for mobile buttons and spacing */
   }
 
   body {
@@ -331,10 +364,9 @@ body {
     margin: 0;
   }
 
-  /* Reset desktop styles */
   .material-card {
-    box-shadow: none;
     border-radius: 0;
+    box-shadow: none;
   }
   
   .material-card:hover {
