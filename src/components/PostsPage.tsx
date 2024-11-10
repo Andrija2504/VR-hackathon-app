@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { profiles, posts, friends, gamePosts, playedGames } from '../data';
@@ -6,13 +6,25 @@ import Sphere360 from './Sphere360';
 
 interface PostsPageProps {
   loggedInUserId: number;
+  isWebXrSupported: boolean;
 }
 
-const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId }) => {
+
+const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId, isWebXrSupported }) => {
+
+  const [vrSession, setVrSession] = useState<XRSession | null>(null);
+
+  const startVrSession = async () => {
+    if (navigator.xr) {
+      const session = await navigator.xr.requestSession('immersive-vr');
+      setVrSession(session);
+    }
+  };
+  
   // Get profile name by ID
   const getProfileName = (profileId: number): string => {
     const profile = profiles.find((p) => p.id === profileId);
-    return profile ? `${profile.name} ${profile.lastName}` : 'Unknown Profile';
+    return profile ? ${profile.name} ${profile.lastName} : 'Unknown Profile';
   };
 
   // Check if a user is a friend
@@ -57,6 +69,14 @@ const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId }) => {
   return (
     <div style={{ padding: '20px' }}>
       <h1>Feel the Austrian "Lebensgefühl"</h1>
+
+      {/*{filteredPosts.length > 0 && isWebXrSupported && (*/}
+      {/*    <button onClick={startVrSession}>Enter VR</button>*/}
+      {/*)}*/}
+      { isWebXrSupported && (
+          <button onClick={startVrSession}>Enter VR</button>
+      )}
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
@@ -65,7 +85,7 @@ const PostsPage: React.FC<PostsPageProps> = ({ loggedInUserId }) => {
               <div className="canvas-container">
                 <Canvas>
                   <OrbitControls enableZoom={false} />
-                  <Sphere360 imageUrl={post.img_url} />
+                  <Sphere360 imageUrl={post.img_url} vrSession={vrSession} />
                 </Canvas>
               </div>
               <div className="post-caption">{post.caption}</div>
