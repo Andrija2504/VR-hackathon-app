@@ -31,7 +31,7 @@ export const posts = [
   { id: 20, profileId: 4, img_url: '/rainbow_1.JPG', caption: 'Rainbow.', visibility: 2, latitude: 52.5200, longitude: 13.4050 }, // Berlin, Germany
   { id: 21, profileId: 5, img_url: '/salem waterfront.JPG', caption: 'Salem waterfront.', visibility: 1, latitude: 44.9429, longitude: -123.0351 }, // Salem, OR
   { id: 22, profileId: 1, img_url: '/smith rock.JPG', caption: 'Smith rock.', visibility: 3, latitude: 44.3623, longitude: -121.1361 }, // Smith Rock, OR
-  { id: 23, profileId: 2, img_url: '/smoke sunset.JPG', caption: 'Smokey sunset.', visibility: 2, latitude: 47.6062, longitude: -122.3321 }, // Seattle, WA
+  //{ id: 23, profileId: 2, img_url: '/smoke sunset.JPG', caption: 'Smokey sunset.', visibility: 2, latitude: 47.6062, longitude: -122.3321 }, // Seattle, WA
   { id: 24, profileId: 3, img_url: '/Sunrise 1.JPG', caption: 'Sunrise picture 1.', visibility: 3, latitude: 40.7306, longitude: -73.9352 }, // New York, NY
   { id: 25, profileId: 4, img_url: '/Sunrise 2.JPG', caption: 'Sunrise picture 2.', visibility: 1, latitude: 55.7558, longitude: 37.6173 }, // Moscow, Russia
   { id: 26, profileId: 5, img_url: '/tahoe 400.JPG', caption: 'Tahoe picture 1.', visibility: 2, latitude: 39.0968, longitude: -120.0324 }, // Lake Tahoe
