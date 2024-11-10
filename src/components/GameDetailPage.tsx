@@ -144,7 +144,7 @@ const GameDetailPage: React.FC = () => {
         } else {
           console.warn('Map instance is not available.');
         }
-      }, 5000);
+      }, 2000);
     }
   };
 
@@ -167,8 +167,9 @@ const GameDetailPage: React.FC = () => {
   }, [mapInstance]);
 
   if (currentIndex >= gameImages.length) {
+    console.log("Check")
     // Fade out music when game is over
-    setIsAudioPlaying(false);
+    // setIsAudioPlaying(false);
     return (
       <div className="game-over-container">
         <div className="material-card">

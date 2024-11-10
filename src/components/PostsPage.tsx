@@ -7,6 +7,8 @@ import { XR, createXRStore } from '@react-three/xr';
 
 const xrStore = createXRStore();
 
+console.log(xrStore)
+
 interface PostsPageProps {
   loggedInUserId: number;
 }
